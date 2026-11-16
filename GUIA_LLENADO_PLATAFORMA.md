@@ -91,7 +91,10 @@ Colegio: "Colegio Distrital Modelo"
 
 **¿Por qué tercero?** Necesitas usuarios para crear contenido y para que los estudiantes se inscriban.
 
-**Dónde:** Pestaña "Usuarios" en el admin panel
+**Dónde:** Pestaña **Usuarios** en el admin.
+
+- Estudiantes: **Usuarios → Estudiantes → Nuevo Estudiante**
+- Admins de colegio o de plataforma: **Usuarios → Administradores → Nuevo administrador** (el de colegio debe llevar colegio asignado)
 
 **Orden sugerido:**
 
@@ -116,7 +119,7 @@ Colegio: "Colegio Distrital Modelo"
   - `socioeconomicStratum`: Estrato socioeconómico
   - `areasOfDifficulty`, `areasOfStrength`: Áreas de dificultad/fortaleza
 
-**Nota:** El `teacher_admin` ya existe (tú), así que no necesitas crearlo.
+**Nota:** El primer `teacher_admin` ya existe. Otros admins de plataforma se crean en **Usuarios → Administradores**.
 
 ---
 

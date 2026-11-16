@@ -1,21 +1,21 @@
-# 📚 Instructivo para Administradores - EducaSaber LMS
+# Instructivo para administradores — EducaSaber LMS
 
-## 🎯 **Roles y Permisos**
+## Roles
 
-### 👨‍💼 **Profesor Administrador (teacher_admin)**
-- **Acceso completo** a todas las funcionalidades
-- Puede crear, editar y eliminar: lecciones, módulos, cursos, preguntas
-- Puede gestionar múltiples colegios
-- Puede crear y eliminar usuarios
-- Acceso a configuración y carga masiva
+### Administrador de plataforma (`teacher_admin`)
+- Crea lecciones, módulos, cursos, preguntas y exámenes
+- Gestiona colegios y branding
+- Crea y elimina **estudiantes** y **otros administradores**
+- En **Usuarios → Administradores** da de alta un admin de colegio (con colegio asignado) o de plataforma
+- Carga masiva (estudiantes, colegios, lecciones, preguntas) y configuración
 
-### 🏫 **Administrador de Colegio (school_admin)**
-- **Acceso limitado** a su institución
-- Solo puede crear y gestionar **cursos**
-- Puede **consultar** lecciones y módulos existentes
-- Puede **editar** usuarios (no crear ni eliminar)
-- **NO** puede crear lecciones, módulos o preguntas
-- **NO** tiene acceso a configuración
+### Administrador de colegio (`school_admin`)
+- Solo ve **su** institución
+- Puede **crear, editar y eliminar estudiantes** de su colegio
+- Puede crear cursos y exámenes para su institución
+- Puede consultar lecciones, módulos y preguntas ya creadas
+- **No** puede crear otros administradores, colegios ni contenido de lecciones/preguntas
+- **No** tiene la pestaña de configuración / carga masiva de contenido
 
 ---
 
@@ -48,8 +48,8 @@
 - Tiempo estimado de estudio
 
 ### ✅ **Quién puede crear Lecciones:**
-- **Solo Profesor Administrador (teacher_admin)**
-- **NO** Administrador de Colegio
+- **Solo administrador de plataforma**
+- **NO** administrador de colegio
 
 ### 📝 **Proceso de Creación:**
 1. Ir a pestaña **"📖 Lecciones"**
@@ -79,8 +79,8 @@
 - Preparación para crear cursos
 
 ### ✅ **Quién puede crear Módulos:**
-- **Solo Profesor Administrador (teacher_admin)**
-- **NO** Administrador de Colegio
+- **Solo administrador de plataforma**
+- **NO** administrador de colegio
 
 ### 📝 **Proceso de Creación:**
 1. Ir a pestaña **"📚 Módulos"**
@@ -109,12 +109,12 @@
 - Asignado a una **institución**
 
 ### ✅ **Quién puede crear Cursos:**
-- **Profesor Administrador**: Puede crear para cualquier colegio
+- **Administrador de plataforma**: Puede crear para cualquier colegio
 - **Administrador de Colegio**: Solo para su institución
 
 ### 📝 **Proceso de Creación:**
 
-#### **Para Profesor Administrador:**
+#### **Para Administrador de plataforma:**
 1. Ir a pestaña **"🎓 Cursos"**
 2. Hacer clic en **"Nuevo Curso"**
 3. Completar formulario:
@@ -137,7 +137,7 @@
 4. Guardar
 
 ### 🔍 **Diferencias por Rol:**
-- **Profesor Administrador**: Ve todos los cursos del sistema
+- **Administrador de plataforma**: Ve todos los cursos del sistema
 - **Administrador de Colegio**: Solo ve cursos de su institución
 
 ---
@@ -151,8 +151,8 @@
 - Base para crear exámenes
 
 ### ✅ **Quién puede crear Preguntas:**
-- **Solo Profesor Administrador (teacher_admin)**
-- **NO** Administrador de Colegio
+- **Solo administrador de plataforma**
+- **NO** administrador de colegio
 
 ### 📝 **Proceso de Creación:**
 1. Ir a pestaña **"❓ Preguntas"**
@@ -182,7 +182,7 @@
 - Generan resultados y estadísticas
 
 ### ✅ **Quién puede crear Exámenes:**
-- **Profesor Administrador**: Puede crear para cualquier colegio
+- **Administrador de plataforma**: Puede crear para cualquier colegio
 - **Administrador de Colegio**: Solo para su institución
 
 ### 📝 **Proceso de Creación:**
@@ -198,45 +198,43 @@
 
 ---
 
-## 👥 **6. GESTIÓN DE USUARIOS**
+## 6. Usuarios
 
-### 🎯 **Diferencias por Rol:**
+### Administrador de plataforma
+En **Usuarios** hay dos pestañas:
 
-#### **Profesor Administrador:**
-- ✅ **Crear** nuevos usuarios (estudiantes, admins)
-- ✅ **Editar** información de usuarios
-- ✅ **Eliminar** usuarios
-- ✅ **Ver** usuarios de todas las instituciones
+- **Estudiantes** — alta, edición y baja de alumnos (colegio y grado obligatorios).
+- **Administradores** — **Nuevo administrador**:
+  1. Elige *Administrador de colegio* o *Administrador de plataforma*.
+  2. Si es de colegio, **asígnalo a un colegio**.
+  3. Pon nombre, correo y contraseña. Con eso puede entrar, sin un ingeniero de por medio.
 
-#### **Administrador de Colegio:**
-- ❌ **NO puede crear** usuarios
-- ✅ **Editar** información de usuarios existentes
-- ❌ **NO puede eliminar** usuarios
-- ✅ **Ver** solo usuarios de su institución
+No puedes eliminarte a ti mismo ni al último admin de plataforma. Borrar un admin no borra estudiantes ni cursos.
+
+### Administrador de colegio
+- Crea, edita y elimina **solo estudiantes de su colegio**
+- No ve ni crea otros administradores
 
 ---
 
-## 🔄 **Flujo de Trabajo Recomendado**
+## Flujo de trabajo
 
-### **Para Profesor Administrador:**
+### Administrador de plataforma
 ```
-1. Crear Competencias (si no existen)
-2. Crear Lecciones por competencia
-3. Crear Módulos agrupando lecciones
-4. Crear Preguntas para evaluar
-5. Crear Cursos combinando módulos
-6. Crear Exámenes para evaluar
-7. Gestionar usuarios del sistema
+1. Crear colegios
+2. Crear administradores de colegio (Usuarios → Administradores)
+3. Crear lecciones, módulos y preguntas
+4. Crear cursos y asignarlos al colegio/grado
+5. Crear exámenes
+6. Cargar o dar de alta estudiantes
 ```
 
-### **Para Administrador de Colegio:**
+### Administrador de colegio
 ```
-1. Consultar Lecciones disponibles
-2. Consultar Módulos disponibles
-3. Crear Cursos para su institución
-4. Crear Exámenes para sus estudiantes
-5. Editar información de usuarios
-6. Supervisar progreso de estudiantes
+1. Crear y editar estudiantes de su institución
+2. Consultar lecciones y módulos
+3. Crear cursos y exámenes de su colegio
+4. Ver analytics de su institución
 ```
 
 ---
@@ -252,7 +250,7 @@
 ### ✅ **Acceso:**
 - **Ambos roles** tienen acceso completo a analytics
 - **Filtros automáticos** según el rol:
-  - Profesor Administrador: Ve todo el sistema
+  - Administrador de plataforma: Ve todo el sistema
   - Administrador de Colegio: Solo su institución
 
 ---
@@ -272,7 +270,7 @@
 5. **Probar exámenes** antes de publicarlos
 
 ### 🆘 **Soporte:**
-- Para dudas técnicas, contactar al Profesor Administrador
+- Para dudas técnicas, contactar al Administrador de plataforma
 - Para contenido educativo, coordinar con el equipo académico
 - Revisar analytics regularmente para mejorar el contenido
 
@@ -280,10 +278,10 @@
 
 ## 📞 **Contacto y Soporte**
 
-- **Profesor Administrador**: Acceso completo al sistema
+- **Administrador de plataforma**: Acceso completo al sistema
 - **Administrador de Colegio**: Soporte limitado a su institución
 - **Estudiantes**: Acceso solo a cursos asignados
 
 ---
 
-*Este instructivo está actualizado según las funcionalidades actuales del sistema EducaSaber LMS.*
+*Actualizado en noviembre 2026: alta de administradores desde Usuarios y permisos reales de cada rol.*
