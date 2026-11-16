@@ -1,30 +1,37 @@
-# Landing page mockup
+# EducaSaber LMS
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Plataforma de preparación ICFES: cursos, lecciones, simulacros, resultados y seguimiento por colegio.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/juachernandezore-gmailcoms-projects/v0-landing-page-mockup)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/oiyqVD5JPw5)
+Sitio en producción: [https://educasabercolombia.com.co/](https://educasabercolombia.com.co/)
 
-## Overview
+## Roles
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+- **Estudiante** — estudia lecciones, presenta exámenes y ve su progreso.
+- **Admin de colegio** (`school_admin`) — gestiona los estudiantes de su institución.
+- **Admin de plataforma** (`teacher_admin`) — crea contenido, colegios, usuarios y carga masiva.
 
-## Deployment
+## Stack
 
-Your project is live at:
+Next.js (App Router), Prisma, PostgreSQL (Supabase), NextAuth, despliegue en Vercel (`educa-saber-colombia`).
 
-**[https://vercel.com/juachernandezore-gmailcoms-projects/v0-landing-page-mockup](https://vercel.com/juachernandezore-gmailcoms-projects/v0-landing-page-mockup)**
+## Desarrollo local
 
-## Build your app
+1. Copia `env.example` a `.env.local` y pon un `DATABASE_URL` de PostgreSQL (no SQLite).
+2. Define `NEXTAUTH_SECRET` y `NEXTAUTH_URL=http://localhost:3000`.
+3. Instala e inicia:
 
-Continue building your app on:
+```bash
+npm install
+npx prisma generate
+npm run dev
+```
 
-**[https://v0.dev/chat/projects/oiyqVD5JPw5](https://v0.dev/chat/projects/oiyqVD5JPw5)**
+## Documentación útil
 
-## How It Works
+- `INSTRUCTIVO_ADMINISTRADORES.md` — cómo armar contenido.
+- `GUIA_LLENADO_PLATAFORMA.md` — orden para cargar la plataforma.
+- `SETUP_LOCAL.md` — notas de entorno local.
+- `GUIA_DEPLOY_VERCEL.md` y `CHECKLIST_DEPLOY_VERCEL.md` — publicación.
+- `EXPLICACION_EXAMENES.md` — tipos de examen.
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+No subas `.env` ni `.env.local`. El proyecto de Vercel que sirve el dominio real es `educa-saber-colombia`.

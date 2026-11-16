@@ -68,7 +68,7 @@ import { useModules } from "@/hooks/useModules"
 import { useCourses } from "@/hooks/useCourses"
 import { AnalyticsTab } from "@/components/admin/AnalyticsTab"
 import { ExamManagement } from "@/components/ExamManagement"
-import UserForm from "@/components/UserForm"
+import { UsersHub } from "@/components/UsersHub"
 import SchoolForm from "@/components/SchoolForm"
 import QuestionForm from "@/components/QuestionForm"
 import { QuestionManagementNew } from "@/components/QuestionManagementNew"
@@ -79,7 +79,6 @@ import { BulkImportCenter } from "@/components/BulkImportCenter"
 import { PerformanceLevelManagement } from "@/components/PerformanceLevelManagement"
 import { BrandLoading } from "@/components/BrandLoading"
 import { NotificationManagement } from "@/components/NotificationManagement"
-import { StudentsManagement } from "@/components/StudentsManagement"
 import { LiveClassManagement } from "@/components/LiveClassManagement"
 import { ManualSimulacroManagement } from "@/components/ManualSimulacroManagement"
 import { OtrosSimulacroManagement } from "@/components/OtrosSimulacroManagement"
@@ -318,7 +317,7 @@ export default function AdminDashboard() {
 
           {/* STUDENTS TAB */}
           <TabsContent value="students" className="space-y-6">
-            <StudentsManagement />
+            <UsersHub />
           </TabsContent>
 
           {/* SCHOOLS TAB - Only for Teacher Admins */}

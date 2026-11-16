@@ -47,6 +47,7 @@ interface UserFilters {
   limit?: number
   search?: string
   role?: string
+  roles?: string
   schoolId?: string
 }
 
@@ -119,6 +120,7 @@ export function useUsers() {
       if (filters.limit) params.append('limit', filters.limit.toString())
       if (filters.search) params.append('search', filters.search)
       if (filters.role) params.append('role', filters.role)
+      if (filters.roles) params.append('roles', filters.roles)
       if (filters.schoolId) params.append('schoolId', filters.schoolId)
 
       const response = await fetch(`/api/users?${params.toString()}`)

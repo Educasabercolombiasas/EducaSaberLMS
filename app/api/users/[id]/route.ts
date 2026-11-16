@@ -133,6 +133,7 @@ export async function PUT(
       medicalConditions,
       homeTechnologyAccess,
       homeInternetAccess,
+      contactPhone,
     } = body
 
     // Build where clause based on user role
@@ -176,6 +177,16 @@ export async function PUT(
       }
     }
 
+    const nextRole = gate.session?.user.role === 'school_admin' ? existingUser.role : (role || existingUser.role)
+    const nextSchoolId = gate.session?.user.role === 'school_admin' ? existingUser.schoolId : (schoolId || existingUser.schoolId)
+
+    if (nextRole === 'school_admin' && !nextSchoolId) {
+      return NextResponse.json(
+        { error: 'El administrador de colegio debe tener un colegio asignado' },
+        { status: 400 }
+      )
+    }
+
     // Check if email already exists (if changing email)
     if (email && email !== existingUser.email) {
       const emailExists = await prisma.user.findUnique({
@@ -195,8 +206,9 @@ export async function PUT(
       email: email || existingUser.email,
       firstName: firstName || existingUser.firstName,
       lastName: lastName || existingUser.lastName,
-      role: gate.session?.user.role === 'school_admin' ? existingUser.role : (role || existingUser.role),
-      schoolId: gate.session?.user.role === 'school_admin' ? existingUser.schoolId : (schoolId || existingUser.schoolId),
+      role: nextRole,
+      schoolId: nextSchoolId,
+      contactPhone: contactPhone !== undefined ? contactPhone : existingUser.contactPhone,
       academicGrade: academicGrade !== undefined ? normalizeAcademicGrade(academicGrade) : existingUser.academicGrade,
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : existingUser.dateOfBirth,
       gender: gender !== undefined ? gender : existingUser.gender,
@@ -327,9 +339,10 @@ export async function DELETE(
     // Build where clause based on user role
     let whereClause: any = { id }
     
-    // School admins can only delete users from their school
+    // School admins can only delete students from their school
     if (session.user?.role === 'school_admin' && session.user?.schoolId) {
       whereClause.schoolId = session.user.schoolId
+      whereClause.role = 'student'
     }
 
     // Check if user exists and user has permission to delete
@@ -341,18 +354,41 @@ export async function DELETE(
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 })
     }
 
-    // School admins cannot delete teacher_admin users
-    if (session.user?.role === 'school_admin' && existingUser.role === 'teacher_admin') {
+    if (session.user?.role === 'school_admin' && existingUser.role !== 'student') {
       return NextResponse.json(
-        { error: 'No puedes eliminar usuarios teacher_admin' },
+        { error: 'Solo puedes eliminar estudiantes' },
         { status: 403 }
       )
     }
 
-    // Delete user
-    await prisma.user.delete({
-      where: { id },
-    })
+    if (!session.user?.id) {
+      return NextResponse.json({ error: 'Sesión inválida' }, { status: 400 })
+    }
+
+    if (existingUser.role === 'teacher_admin') {
+      const otherAdmins = await prisma.user.count({
+        where: { role: 'teacher_admin', id: { not: id } },
+      })
+      if (otherAdmins === 0) {
+        return NextResponse.json(
+          { error: 'No puedes eliminar al último administrador de plataforma' },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Soltar contenido creado por este admin para no borrar cursos ni fallar por FK
+    await prisma.$transaction([
+      prisma.course.updateMany({ where: { createdById: id }, data: { createdById: null } }),
+      prisma.module.updateMany({ where: { createdById: id }, data: { createdById: null } }),
+      prisma.exam.updateMany({ where: { createdById: id }, data: { createdById: null } }),
+      prisma.examAssignment.updateMany({ where: { assignedById: id }, data: { assignedById: null } }),
+      prisma.liveClass.updateMany({
+        where: { createdById: id },
+        data: { createdById: session.user.id },
+      }),
+      prisma.user.delete({ where: { id } }),
+    ])
 
     return NextResponse.json({
       message: 'Usuario eliminado exitosamente',

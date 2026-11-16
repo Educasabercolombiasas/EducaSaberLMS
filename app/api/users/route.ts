@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10')
     const search = searchParams.get('search') || ''
     const role = searchParams.get('role') || ''
+    const rolesParam = searchParams.get('roles') || ''
     const schoolId = searchParams.get('schoolId') || ''
     
     const skip = (page - 1) * limit
@@ -33,9 +34,17 @@ export async function GET(request: NextRequest) {
     // Build where clause based on user role and filters
     let whereClause: any = {}
     
-    // School admins can only see users from their school
-    if (session.user?.role === 'school_admin' && session.user?.schoolId) {
+    // School admins can only see students from their school
+    if (session.user?.role === 'school_admin') {
+      if (!session.user.schoolId) {
+        return NextResponse.json({
+          users: [],
+          pagination: { page, limit, total: 0, pages: 0 },
+          schools: [],
+        })
+      }
       whereClause.schoolId = session.user.schoolId
+      whereClause.role = 'student'
     }
     
     // Add search filter
@@ -47,9 +56,17 @@ export async function GET(request: NextRequest) {
       ]
     }
     
-    // Add role filter
-    if (role) {
-      whereClause.role = role
+    // Role filter (platform admin only; school_admin already forced to students)
+    if (session.user?.role === 'teacher_admin') {
+      const validRoles = ['student', 'school_admin', 'teacher_admin']
+      if (rolesParam) {
+        const roles = rolesParam.split(',').map(r => r.trim()).filter(r => validRoles.includes(r))
+        if (roles.length > 0) {
+          whereClause.role = { in: roles }
+        }
+      } else if (role && validRoles.includes(role)) {
+        whereClause.role = role
+      }
     }
     
     // Add school filter (only for teacher_admin)
@@ -224,6 +241,30 @@ export async function POST(request: NextRequest) {
         { error: 'El estudiante debe pertenecer a un colegio' },
         { status: 400 }
       )
+    }
+
+    if (resolvedRole === 'school_admin' && !resolvedSchoolId) {
+      return NextResponse.json(
+        { error: 'El administrador de colegio debe tener un colegio asignado' },
+        { status: 400 }
+      )
+    }
+
+    if (resolvedRole === 'school_admin' || resolvedRole === 'student') {
+      const school = await prisma.school.findUnique({
+        where: { id: String(resolvedSchoolId) },
+        select: { id: true },
+      })
+      if (!school) {
+        return NextResponse.json(
+          { error: 'El colegio seleccionado no existe' },
+          { status: 400 }
+        )
+      }
+    }
+
+    if (resolvedRole === 'teacher_admin') {
+      resolvedSchoolId = resolvedSchoolId || null
     }
 
     // Check if email already exists
